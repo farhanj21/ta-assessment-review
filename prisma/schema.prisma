@@ -1,0 +1,185 @@
+// ---------------------------------------------------------------------------
+// ta-assessment-review — data model
+//
+// Provider note: SQLite is used so a reviewer can clone and run with zero
+// setup. Two consequences that shape this schema:
+//   1. Prisma does not support `enum` on SQLite. Every enum-like column is a
+//      String, with the allowed values defined once in lib/enums.ts and
+//      enforced at the edge by zod. On Postgres these become native enums —
+//      see README "Swapping to Postgres".
+//   2. SQLite has no partial/expression indexes worth using here, so all
+//      indexes below are plain B-trees, which is also what Postgres would use.
+// ---------------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Candidate — the pipeline read model.
+//
+// role / city / stage / assessmentStatus / score all live here because they are
+// exactly the five columns the list screen filters and sorts on. Keeping them
+// on one row means the list is a single indexed table scan with no joins, which
+// is what makes the composite indexes below actually usable.
+// ---------------------------------------------------------------------------
+model Candidate {
+  id        String   @id @default(cuid())
+  fullName  String
+  email     String   @unique
+  city      String
+  role      String // RoleKey — see lib/enums.ts
+  stage     String // StageKey
+  appliedAt DateTime @default(now())
+
+  // Assessment lifecycle lives on Candidate, not on Submission, on purpose:
+  // a Submission row only exists once work is actually submitted, so states
+  // like NOT_SENT / INVITED / IN_PROGRESS / EXPIRED have no row to live on.
+  // This is a single source of truth, not a denormalised copy.
+  assessmentStatus String // AssessmentStatusKey
+
+  // Current headline score 0-100. This IS derived state: written by the
+  // assessment platform on submission and overwritten by the reviewer's score
+  // when a review is saved (both writers go through one transaction in
+  // app/candidates/actions.ts). We accept the write-amplification because the
+  // list filters a range on it AND sorts by it — doing that through
+  // `reviews: { some: { score: ... } }` would defeat every index we have.
+  score Int?
+
+  // --- SERVER-ONLY FIELDS -------------------------------------------------
+  // Never included in any payload that reaches a Client Component. Enforced by
+  // the explicit `select` in lib/candidates.ts, not by convention.
+
+  // Storage object key, NOT a URL. The real file lives behind a signed URL that
+  // is minted per-request by app/api/cv/[candidateId]/route.ts after an auth
+  // check, so no durable link to a CV ever exists in client HTML or in the RSC
+  // payload. See README "Privacy".
+  cvObjectKey String
+  cvFileName  String
+
+  phone String?
+
+  // Recruiter-only. Visible to role ADMIN, stripped for REVIEWER and VIEWER.
+  internalNotes String?
+  // ------------------------------------------------------------------------
+
+  screeningAnswers ScreeningAnswer[]
+  submissions      Submission[]
+  reviews          Review[]
+
+  // INDEX 1 — serves the primary list query:
+  //   WHERE stage = ? AND score BETWEEN ? AND ? ORDER BY score DESC
+  // stage is an equality predicate so it leads; score follows so the same index
+  // satisfies both the range filter and the sort, avoiding a filesort. This is
+  // the single hottest query in the app.
+  @@index([stage, score])
+  // INDEX 2 — serves the facet filters:
+  //   WHERE role = ? AND city = ?
+  // role leads because it is the more selective of the two (8 roles vs 10
+  // cities here, and far more skewed in a real funnel) and because filtering by
+  // role alone is the common case — a left-prefix scan still uses this index.
+  @@index([role, city])
+  // INDEX 3 — serves the "assessment status" facet on its own, and the default
+  // "newest applicants first" sort within a status.
+  @@index([assessmentStatus, appliedAt])
+}
+
+// ---------------------------------------------------------------------------
+// Assessment — the brief itself. Shared across candidates (one brief per role),
+// so it is its own table rather than columns on Submission: editing a brief
+// must not require touching every submission row, and we want to be able to
+// show the brief to a candidate who has not submitted yet.
+// ---------------------------------------------------------------------------
+model Assessment {
+  id              String  @id @default(cuid())
+  slug            String  @unique
+  title           String
+  role            String // RoleKey this brief is used for
+  brief           String
+  durationMinutes Int // expected time budget, used to flag over-runs
+
+  submissions Submission[]
+
+  @@index([role])
+}
+
+// ---------------------------------------------------------------------------
+// Submission — evidence that work was handed in. Exists if and only if the
+// candidate actually submitted; absence is meaningful (see assessmentStatus).
+// ---------------------------------------------------------------------------
+model Submission {
+  id               String   @id @default(cuid())
+  candidateId      String
+  assessmentId     String
+  workUrl          String
+  submittedAt      DateTime
+  timeTakenMinutes Int
+
+  candidate  Candidate  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  assessment Assessment @relation(fields: [assessmentId], references: [id])
+  reviews    Review[]
+
+  // A candidate submits a given brief once. Also gives us a cheap upsert key
+  // for the seed and for any future re-import.
+  @@unique([candidateId, assessmentId])
+  // INDEX 4 — foreign-key lookup for the detail panel:
+  //   WHERE candidateId = ?
+  // Neither SQLite nor Postgres creates an index for a FK automatically, and
+  // without it the detail page's include does a full scan of submissions.
+  @@index([candidateId])
+  @@index([assessmentId])
+}
+
+// ---------------------------------------------------------------------------
+// ScreeningAnswer — the short questionnaire answered at application time.
+// Separate table (not JSON on Candidate) because the question set differs per
+// role and we want to be able to report on a single question across candidates.
+// ---------------------------------------------------------------------------
+model ScreeningAnswer {
+  id          String @id @default(cuid())
+  candidateId String
+  question    String
+  answer      String
+  position    Int // stable display order
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId, position])
+}
+
+// ---------------------------------------------------------------------------
+// Review — one reviewer's verdict. Kept as history rather than overwritten in
+// place, so `Candidate.score` can be recomputed and so a hiring manager can see
+// disagreement between reviewers.
+// ---------------------------------------------------------------------------
+model Review {
+  id             String   @id @default(cuid())
+  candidateId    String
+  submissionId   String?
+  reviewerId     String
+  reviewerName   String
+  score          Int // 0-100, same scale as Candidate.score
+  recommendation String // RecommendationKey
+  comment        String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  candidate  Candidate   @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  submission Submission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+
+  // One verdict per reviewer per candidate. Re-submitting the form updates the
+  // existing row, which is what makes the Server Action a clean upsert and
+  // makes the optimistic UI correct on the second submit.
+  @@unique([candidateId, reviewerId])
+  // INDEX 5 — the detail panel lists a candidate's reviews newest first:
+  //   WHERE candidateId = ? ORDER BY createdAt DESC
+  // The @@unique above only covers (candidateId, reviewerId), which cannot
+  // satisfy that sort.
+  @@index([candidateId, createdAt])
+  @@index([submissionId])
+}

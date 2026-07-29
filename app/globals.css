@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /*
+   * Accessibility baseline, set once here rather than repeated per component.
+   *
+   * `:focus-visible` (not `:focus`) so the ring appears for keyboard and
+   * programmatic focus but not on mouse clicks — which is what lets us keep a
+   * genuinely high-contrast 2px ring without it feeling noisy. Tailwind's
+   * default reset removes the UA outline, so if we did not put one back,
+   * keyboard users would have no focus indicator at all.
+   */
+  :focus-visible {
+    outline: 2px solid theme('colors.brand.600');
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Never remove the indicator entirely — only replace it. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Respect users who have asked for less motion at the OS level. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+  }
+}
+
+@layer components {
+  /*
+   * Visible-on-focus skip link. It is the first focusable element in the
+   * document, so a keyboard user's very first Tab offers a jump past the
+   * filter controls straight to the results.
+   */
+  .skip-link {
+    @apply absolute left-4 top-4 z-50 -translate-y-24 rounded-md bg-brand-700 px-4 py-2
+           text-sm font-medium text-white transition-transform focus:translate-y-0;
+  }
+}
