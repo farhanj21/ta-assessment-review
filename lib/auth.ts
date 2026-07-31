@@ -32,9 +32,9 @@ export type Session = {
 };
 
 const DEMO_USERS: Record<UserRole, Session> = {
-  ADMIN: { userId: 'usr_admin', name: 'Priya Raman', role: 'ADMIN' },
-  REVIEWER: { userId: 'usr_reviewer', name: 'Sam Okafor', role: 'REVIEWER' },
-  VIEWER: { userId: 'usr_viewer', name: 'Jo Lindqvist', role: 'VIEWER' },
+  ADMIN: { userId: 'usr_admin', name: 'Amir Shahzad', role: 'ADMIN' },
+  REVIEWER: { userId: 'usr_reviewer', name: 'Farhan Jafri', role: 'REVIEWER' },
+  VIEWER: { userId: 'usr_viewer', name: 'Hammad Raza', role: 'VIEWER' },
 };
 
 function isUserRole(value: string | undefined): value is UserRole {

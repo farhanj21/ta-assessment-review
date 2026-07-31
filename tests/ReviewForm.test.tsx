@@ -38,7 +38,7 @@ const baseProps = {
   candidateName: 'Amara Okonkwo',
   myReview: null,
   canSubmit: true,
-  reviewerName: 'Sam Okafor',
+  reviewerName: 'Farhan Jafri',
   viewerRole: 'REVIEWER',
 };
 

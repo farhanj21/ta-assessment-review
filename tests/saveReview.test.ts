@@ -21,7 +21,7 @@ import type { Session } from '@/lib/auth';
  */
 
 const currentSession: { value: Session } = {
-  value: { userId: 'usr_reviewer', name: 'Sam Okafor', role: 'REVIEWER' },
+  value: { userId: 'usr_reviewer', name: 'Farhan Jafri', role: 'REVIEWER' },
 };
 
 vi.mock('@/lib/auth', async (importOriginal) => {
@@ -94,7 +94,7 @@ const validFields = {
 
 beforeEach(async () => {
   vi.clearAllMocks();
-  currentSession.value = { userId: 'usr_reviewer', name: 'Sam Okafor', role: 'REVIEWER' };
+  currentSession.value = { userId: 'usr_reviewer', name: 'Farhan Jafri', role: 'REVIEWER' };
   await db.review.deleteMany();
   await db.submission.deleteMany();
   await db.screeningAnswer.deleteMany();
@@ -125,7 +125,7 @@ describe('saveReview', () => {
       reviewerId: 'usr_reviewer',
       // Denormalised from the session so the detail pane can show a name
       // without a join to a users table we do not have.
-      reviewerName: 'Sam Okafor',
+      reviewerName: 'Farhan Jafri',
     });
 
     // The derived column must move in the same transaction, or the list would
@@ -184,7 +184,7 @@ describe('saveReview', () => {
 
     await saveReview(initialReviewFormState, formData({ candidateId: candidate.id, ...validFields }));
 
-    currentSession.value = { userId: 'usr_admin', name: 'Priya Raman', role: 'ADMIN' };
+    currentSession.value = { userId: 'usr_admin', name: 'Amir Shahzad', role: 'ADMIN' };
     await saveReview(
       initialReviewFormState,
       formData({

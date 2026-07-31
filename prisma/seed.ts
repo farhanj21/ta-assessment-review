@@ -47,18 +47,18 @@ const pick = <T,>(items: readonly T[]): T => items[Math.floor(rng() * items.leng
 const intBetween = (min: number, max: number) => min + Math.floor(rng() * (max - min + 1));
 
 const FIRST_NAMES = [
-  'Amara', 'Bilal', 'Clara', 'Dmitri', 'Elena', 'Farid', 'Grace', 'Hugo',
-  'Ines', 'Jonas', 'Kavya', 'Lukas', 'Mira', 'Noor', 'Otto', 'Petra',
-  'Quentin', 'Rania', 'Sofia', 'Tomas', 'Ulrike', 'Viktor', 'Wafa', 'Xavi',
-  'Yusuf', 'Zoe', 'Aoife', 'Bruno', 'Chiara', 'Daan', 'Eero', 'Freja',
-  'Gabor', 'Hana', 'Ivan', 'Julia', 'Karim', 'Lena', 'Marek', 'Nadia',
+  'Ahmed', 'Bilal', 'Fatima', 'Hassan', 'Ayesha', 'Usman', 'Zainab', 'Hamza',
+  'Sana', 'Imran', 'Hira', 'Faisal', 'Amna', 'Noor', 'Owais', 'Rabia',
+  'Qasim', 'Rida', 'Saad', 'Tariq', 'Uzma', 'Waqar', 'Maham', 'Yasir',
+  'Yusuf', 'Zara', 'Asad', 'Bushra', 'Daniyal', 'Eman', 'Fahad', 'Gulshan',
+  'Habib', 'Iqra', 'Junaid', 'Kiran', 'Kamran', 'Laiba', 'Mustafa', 'Nadia',
 ];
 const LAST_NAMES = [
-  'Okonkwo', 'Haddad', 'Novak', 'Petrov', 'Marino', 'Bensaid', 'Whitfield', 'Lindqvist',
-  'Ferreira', 'Andersen', 'Iyer', 'Brandt', 'Kaplan', 'Rahman', 'Voss', 'Kowalski',
-  'Dubois', 'Ziani', 'Almeida', 'Silva', 'Keller', 'Horvath', 'Ben Ali', 'Puig',
-  'Demir', 'Papadakis', 'Byrne', 'Costa', 'Rossi', 'Visser', 'Virtanen', 'Nilsen',
-  'Szabo', 'Takacs', 'Sokolov', 'Wagner', 'Mansour', 'Fischer', 'Zielinski', 'Aziz',
+  'Khan', 'Ahmed', 'Ali', 'Hussain', 'Malik', 'Sheikh', 'Siddiqui', 'Chaudhry',
+  'Butt', 'Awan', 'Qureshi', 'Hashmi', 'Iqbal', 'Rahman', 'Mirza', 'Abbasi',
+  'Durrani', 'Zafar', 'Aslam', 'Shah', 'Khattak', 'Raza', 'Baig', 'Niazi',
+  'Rajput', 'Paracha', 'Bhatti', 'Gill', 'Mughal', 'Ansari', 'Farooqi', 'Naqvi',
+  'Syed', 'Akhtar', 'Rehman', 'Waheed', 'Mansoor', 'Riaz', 'Sharif', 'Aziz',
 ];
 
 /** One brief per role. Assessments are shared across candidates by design. */
@@ -143,12 +143,12 @@ const SCREENING_ANSWERS: string[][] = [
 ];
 
 const OTHER_REVIEWERS = [
-  { reviewerId: 'usr_admin', reviewerName: 'Priya Raman' },
-  { reviewerId: 'usr_lead_eng', reviewerName: 'Marcus Adeyemi' },
-  { reviewerId: 'usr_hiring_mgr', reviewerName: 'Elin Dahl' },
+  { reviewerId: 'usr_admin', reviewerName: 'Amir Shahzad' },
+  { reviewerId: 'usr_lead_eng', reviewerName: 'Saba Tariq' },
+  { reviewerId: 'usr_hiring_mgr', reviewerName: 'Omer Farooq' },
 ];
 /** Matches lib/auth.ts DEMO_USERS.REVIEWER so the "edit my review" path is seeded. */
-const DEMO_REVIEWER = { reviewerId: 'usr_reviewer', reviewerName: 'Sam Okafor' };
+const DEMO_REVIEWER = { reviewerId: 'usr_reviewer', reviewerName: 'Farhan Jafri' };
 
 const REVIEW_COMMENTS = [
   'Strong submission. The data model handles the timezone edge cases correctly and the README is honest about what was left out. Would move to a technical interview.',
@@ -276,7 +276,7 @@ async function main() {
         // Recruiter-only. ADMIN sees these; REVIEWER and VIEWER never receive them.
         internalNotes:
           i % 3 === 0
-            ? `Sourced via ${pick(['referral (Marcus A.)', 'LinkedIn outreach', 'careers page', 'a returning applicant from Q1'])}. Salary expectation £${intBetween(52, 95)}k. ${pick(['Flagged as a strong fit by the hiring manager.', 'Second application this year — first was for a more junior role.', 'Available for interviews only after 6pm.', 'Currently interviewing elsewhere; expect a compressed timeline.'])}`
+            ? `Sourced via ${pick(['referral (Saba T.)', 'LinkedIn outreach', 'careers page', 'a returning applicant from Q1'])}. Salary expectation PKR ${intBetween(80, 250)}k. ${pick(['Flagged as a strong fit by the hiring manager.', 'Second application this year — first was for a more junior role.', 'Available for interviews only after 6pm.', 'Currently interviewing elsewhere; expect a compressed timeline.'])}`
             : null,
         screeningAnswers: {
           create: SCREENING_QUESTIONS.map((question, position) => ({
@@ -378,7 +378,7 @@ async function main() {
 
   console.log(`\nSeeded ${TOTAL} candidates across ${ROLES.length} roles and ${CITIES.length} cities.`);
   console.log(`  ${submissionCount} submissions, ${reviewCount} reviews`);
-  console.log(`  ${demoReviewerCount} already reviewed by the demo reviewer (Sam Okafor)`);
+  console.log(`  ${demoReviewerCount} already reviewed by the demo reviewer (Farhan Jafri)`);
   console.log('  by assessment status:');
   for (const row of summary.sort((a, b) => a.assessmentStatus.localeCompare(b.assessmentStatus))) {
     console.log(`    ${row.assessmentStatus.padEnd(12)} ${row._count}`);
