@@ -86,9 +86,9 @@ export function FilterBar({
   const count = activeFilterCount(filters);
 
   const selectClass =
-    'w-full rounded-md border border-slate-300 bg-white px-2.5 py-2 text-sm text-slate-900 ' +
-    'shadow-sm hover:border-slate-400';
-  const labelClass = 'block text-xs font-medium text-slate-700';
+    'w-full rounded-lg border border-surface-200 bg-white px-2.5 py-2 text-sm text-slate-900 ' +
+    'shadow-card hover:border-brand-300 transition-colors';
+  const labelClass = 'block text-xs font-semibold uppercase tracking-wide text-slate-500';
 
   return (
     <form
@@ -99,7 +99,7 @@ export function FilterBar({
       // aria-busy tells assistive tech the region is updating during the
       // transition, matching the visual pending treatment below.
       aria-busy={isPending}
-      className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm sm:p-4"
+      className="rounded-2xl border border-surface-200 bg-white p-3 shadow-card sm:p-4"
     >
       {/*
         A fieldset+legend groups the controls so a screen reader announces
@@ -112,7 +112,7 @@ export function FilterBar({
           <h2 className="text-sm font-semibold text-slate-900">
             Filters
             {count > 0 && (
-              <span className="ml-2 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700">
+              <span className="ml-2 rounded-full bg-accent-100 px-2 py-0.5 text-xs font-semibold text-accent-800">
                 {count} active
               </span>
             )}
@@ -132,7 +132,7 @@ export function FilterBar({
                   scoreMax: null,
                 })
               }
-              className="rounded text-xs font-medium text-brand-700 underline underline-offset-2 hover:text-brand-600"
+              className="rounded text-xs font-semibold text-brand-600 underline underline-offset-2 hover:text-brand-500 transition-colors"
             >
               Clear all
             </button>
@@ -150,7 +150,7 @@ export function FilterBar({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="e.g. Amara"
-            className="mt-1 w-full rounded-md border border-slate-300 px-2.5 py-2 text-sm shadow-sm placeholder:text-slate-400"
+            className="mt-1 w-full rounded-lg border border-surface-200 px-2.5 py-2 text-sm shadow-card placeholder:text-slate-400 hover:border-brand-300 transition-colors"
           />
         </div>
 
@@ -256,7 +256,7 @@ export function FilterBar({
               max={100}
               defaultValue={filters.scoreMin ?? ''}
               placeholder="Min"
-              className="w-full rounded-md border border-slate-300 px-2.5 py-2 text-sm shadow-sm placeholder:text-slate-400"
+              className="w-full rounded-lg border border-surface-200 px-2.5 py-2 text-sm shadow-card placeholder:text-slate-400 hover:border-brand-300 transition-colors"
             />
             <span aria-hidden="true" className="text-slate-400">
               –
@@ -273,7 +273,7 @@ export function FilterBar({
               max={100}
               defaultValue={filters.scoreMax ?? ''}
               placeholder="Max"
-              className="w-full rounded-md border border-slate-300 px-2.5 py-2 text-sm shadow-sm placeholder:text-slate-400"
+              className="w-full rounded-lg border border-surface-200 px-2.5 py-2 text-sm shadow-card placeholder:text-slate-400 hover:border-brand-300 transition-colors"
             />
           </div>
           <p className="mt-1 text-xs text-slate-500">
@@ -303,8 +303,8 @@ export function FilterBar({
         <div className="flex items-center gap-3">
           <button
             type="submit"
-            className="rounded-md bg-brand-700 px-3 py-2 text-sm font-medium text-white shadow-sm
-                       hover:bg-brand-600 disabled:opacity-60"
+            className="rounded-lg bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-2 text-sm font-semibold text-white shadow-card
+                       hover:from-brand-500 hover:to-brand-600 disabled:opacity-60 transition-all"
             disabled={isPending}
           >
             Apply filters

@@ -64,7 +64,7 @@ export function CandidateList({
       )}
 
       {truncated && (
-        <p className="mt-3 rounded-md bg-slate-100 px-3 py-2 text-xs text-slate-600">
+        <p className="mt-3 rounded-lg bg-surface-100 px-3 py-2 text-xs text-slate-600">
           Showing the first {items.length} of {total}. Narrow the filters to see more — see the
           README on cursor pagination for larger volumes.
         </p>
@@ -92,10 +92,10 @@ function CandidateRow({
       // in a set of links — it is what makes the selection legible to a screen
       // reader, where the blue ring means nothing.
       aria-current={isSelected ? 'true' : undefined}
-      className={`block rounded-lg border p-3 shadow-sm transition-colors ${
+      className={`block rounded-xl border p-3 shadow-card transition-all ${
         isSelected
-          ? 'border-brand-600 bg-brand-50 ring-1 ring-brand-600'
-          : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+          ? 'border-brand-500 bg-brand-50 ring-2 ring-brand-500/30'
+          : 'border-surface-200 bg-white hover:border-brand-300 hover:bg-brand-50/30 hover:shadow-card-hover'
       }`}
     >
       <div className="flex items-start justify-between gap-3">

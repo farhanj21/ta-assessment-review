@@ -104,7 +104,7 @@ export function ReviewForm({
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-surface-200 bg-white p-4 shadow-card">
       <h3 className="text-sm font-semibold text-slate-900">
         {optimisticReview ? 'Your review' : 'Add your review'}
       </h3>
@@ -195,7 +195,7 @@ export function ReviewForm({
               max={100}
               value={score}
               onChange={(event) => setScore(Number(event.target.value))}
-              className="w-20 rounded-md border border-slate-300 px-2 py-1.5 text-sm tabular-nums shadow-sm"
+              className="w-20 rounded-lg border border-surface-200 px-2 py-1.5 text-sm tabular-nums shadow-card"
             />
           </div>
           {state.fieldErrors?.score && (
@@ -221,7 +221,7 @@ export function ReviewForm({
               state.fieldErrors?.recommendation ? `${id}-recommendation-error` : undefined
             }
             aria-invalid={state.fieldErrors?.recommendation ? true : undefined}
-            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2.5 py-2 text-sm shadow-sm"
+            className="mt-1 w-full rounded-lg border border-surface-200 bg-white px-2.5 py-2 text-sm shadow-card"
           >
             {RECOMMENDATIONS.map((option) => (
               <option key={option} value={option}>
@@ -257,7 +257,7 @@ export function ReviewForm({
                 : `${id}-comment-hint`
             }
             aria-invalid={state.fieldErrors?.comment ? true : undefined}
-            className="mt-1 w-full rounded-md border border-slate-300 px-2.5 py-2 text-sm shadow-sm
+            className="mt-1 w-full rounded-lg border border-surface-200 px-2.5 py-2 text-sm shadow-card
                        placeholder:text-slate-400"
             placeholder="Strong data modelling; the README is honest about tradeoffs…"
           />
@@ -272,8 +272,8 @@ export function ReviewForm({
           <button
             type="submit"
             disabled={isPending}
-            className="rounded-md bg-brand-700 px-4 py-2 text-sm font-medium text-white shadow-sm
-                       hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-2 text-sm font-semibold text-white shadow-card
+                       hover:from-brand-500 hover:to-brand-600 disabled:cursor-not-allowed disabled:opacity-60 transition-all"
           >
             {isPending ? 'Saving…' : optimisticReview ? 'Update review' : 'Submit review'}
           </button>

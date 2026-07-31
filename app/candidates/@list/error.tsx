@@ -30,7 +30,7 @@ export default function ListError({
   }, [error]);
 
   return (
-    <div role="alert" className="mt-4 rounded-lg border border-rose-300 bg-rose-50 p-4">
+    <div role="alert" className="mt-4 rounded-2xl border border-rose-300 bg-rose-50 p-4">
       <h2 className="text-sm font-semibold text-rose-900">Could not load candidates</h2>
       <p className="mt-1 text-sm text-rose-800">
         The list failed to load. Your filters are still in the URL, so retrying will keep them.
@@ -41,7 +41,7 @@ export default function ListError({
       <button
         type="button"
         onClick={reset}
-        className="mt-3 rounded-md bg-rose-700 px-3 py-2 text-sm font-medium text-white hover:bg-rose-800"
+        className="mt-3 rounded-lg bg-rose-700 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-800 transition-colors"
       >
         Try again
       </button>

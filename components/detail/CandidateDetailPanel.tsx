@@ -71,7 +71,7 @@ export function CandidateDetailPanel({
         <span aria-hidden="true">←</span> Back to candidates
       </Link>
 
-      <header className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+      <header className="rounded-2xl border border-surface-200 bg-white p-4 shadow-card sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <h1 id="candidate-name" className="text-xl font-semibold tracking-tight text-slate-900">
@@ -111,8 +111,8 @@ export function CandidateDetailPanel({
             href={candidate.cvHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium
-                       text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-lg border border-surface-200 bg-white px-3 py-1.5 text-sm font-medium
+                       text-slate-800 shadow-card hover:bg-brand-50 hover:border-brand-300 transition-colors"
           >
             View CV
             <span className="ml-1 text-slate-500">({candidate.cvFileName})</span>
@@ -124,8 +124,8 @@ export function CandidateDetailPanel({
               href={candidate.submission.workUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium
-                         text-slate-800 shadow-sm hover:bg-slate-50"
+              className="rounded-lg border border-surface-200 bg-white px-3 py-1.5 text-sm font-medium
+                         text-slate-800 shadow-card hover:bg-brand-50 hover:border-brand-300 transition-colors"
             >
               Submitted work
               <span className="sr-only"> — opens in a new tab</span>
@@ -228,7 +228,7 @@ export function CandidateDetailPanel({
         ) : (
           <ul className="space-y-3">
             {otherReviews.map((review) => (
-              <li key={review.id} className="rounded-md border border-slate-200 bg-slate-50 p-3">
+              <li key={review.id} className="rounded-xl border border-surface-200 bg-surface-50 p-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-medium text-slate-900">{review.reviewerName}</span>
                   <span className="text-sm font-semibold tabular-nums text-slate-700">
@@ -258,7 +258,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+    <section className="rounded-2xl border border-surface-200 bg-white p-4 shadow-card sm:p-5">
       <div className="mb-3 flex items-center gap-2">
         <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
         {badge && (

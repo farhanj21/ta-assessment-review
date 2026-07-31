@@ -9,7 +9,7 @@
  */
 export default function NoCandidateSelected() {
   return (
-    <div className="hidden h-full min-h-[60vh] place-items-center rounded-lg border border-dashed border-slate-300 bg-white p-8 lg:grid">
+    <div className="hidden h-full min-h-[60vh] place-items-center rounded-2xl border border-dashed border-surface-300 bg-white p-8 lg:grid">
       <div className="max-w-xs text-center">
         <p className="text-sm font-medium text-slate-900">No candidate selected</p>
         <p className="mt-1 text-sm text-slate-600">

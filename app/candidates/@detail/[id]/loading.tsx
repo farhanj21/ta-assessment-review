@@ -10,7 +10,7 @@ export default function DetailLoading() {
     <div aria-busy="true" aria-live="polite" className="space-y-4">
       <span className="sr-only">Loading candidate…</span>
 
-      <div className="animate-pulse rounded-lg border border-slate-200 bg-white p-5">
+      <div className="animate-pulse rounded-2xl border border-surface-200 bg-white p-5">
         <div className="h-6 w-1/3 rounded bg-slate-200" />
         <div className="mt-3 h-4 w-1/2 rounded bg-slate-100" />
         <div className="mt-4 flex gap-2">
@@ -23,7 +23,7 @@ export default function DetailLoading() {
         <div
           key={index}
           aria-hidden="true"
-          className="animate-pulse rounded-lg border border-slate-200 bg-white p-5"
+          className="animate-pulse rounded-2xl border border-surface-200 bg-white p-5"
         >
           <div className="h-4 w-32 rounded bg-slate-200" />
           <div className="mt-3 space-y-2">

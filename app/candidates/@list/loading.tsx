@@ -14,14 +14,14 @@ export default function ListLoading() {
     <div aria-busy="true" aria-live="polite" className="mt-4">
       <span className="sr-only">Loading candidates…</span>
 
-      <div className="h-[420px] animate-pulse rounded-lg border border-slate-200 bg-white" />
+      <div className="h-[420px] animate-pulse rounded-2xl border border-surface-200 bg-white" />
 
       <ul className="mt-6 space-y-2">
         {Array.from({ length: 6 }).map((_, index) => (
           <li
             key={index}
             aria-hidden="true"
-            className="animate-pulse rounded-lg border border-slate-200 bg-white p-3"
+            className="animate-pulse rounded-xl border border-surface-200 bg-white p-3"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="w-full space-y-2">

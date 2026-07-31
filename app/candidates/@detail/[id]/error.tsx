@@ -21,7 +21,7 @@ export default function DetailError({
   }, [error]);
 
   return (
-    <div role="alert" className="rounded-lg border border-rose-300 bg-rose-50 p-5">
+    <div role="alert" className="rounded-2xl border border-rose-300 bg-rose-50 p-5">
       <h2 className="text-base font-semibold text-rose-900">Could not load this candidate</h2>
       <p className="mt-1 text-sm text-rose-800">
         Something went wrong fetching their profile. The candidate list is unaffected — you can
@@ -33,7 +33,7 @@ export default function DetailError({
       <button
         type="button"
         onClick={reset}
-        className="mt-3 rounded-md bg-rose-700 px-3 py-2 text-sm font-medium text-white hover:bg-rose-800"
+        className="mt-3 rounded-lg bg-rose-700 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-800 transition-colors"
       >
         Try again
       </button>
