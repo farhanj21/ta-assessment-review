@@ -88,6 +88,9 @@ function CandidateRow({
       // and pressing back returns to the exact filtered list rather than an
       // unfiltered one.
       href={`/candidates/${candidate.id}${queryString ? `?${queryString}` : ''}`}
+      // Disable Next.js's default scroll-to-top so the list pane stays put
+      // and the detail pane scrolls itself to the top via ScrollToTop.
+      scroll={false}
       // aria-current is the standard way to mark "this is the one you are on"
       // in a set of links — it is what makes the selection legible to a screen
       // reader, where the blue ring means nothing.

@@ -9,6 +9,7 @@ import {
   StageBadge,
 } from '@/components/ui/badges';
 import { ReviewForm, type MyReview } from './ReviewForm';
+import { ScrollToTop } from './ScrollToTop';
 
 /**
  * The candidate detail panel — a Server Component.
@@ -63,6 +64,7 @@ export function CandidateDetailPanel({
 
   return (
     <article className="space-y-4 pb-8" aria-labelledby="candidate-name">
+      <ScrollToTop />
       {/* Mobile-only escape hatch. On desktop the list is always on screen. */}
       <Link
         href={backHref}
