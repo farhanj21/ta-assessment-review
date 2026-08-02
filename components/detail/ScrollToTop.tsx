@@ -17,19 +17,39 @@ export function ScrollToTop() {
   const markerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Walk up the DOM to find the overflow container (the lg:overflow-y-auto
-    // wrapper in layout.tsx), then reset its scroll position.
-    let el = markerRef.current?.parentElement;
-    while (el) {
-      const { overflowY } = getComputedStyle(el);
-      if (overflowY === 'auto' || overflowY === 'scroll') {
-        el.scrollTop = 0;
-        return;
+    const scrollToTop = () => {
+      // Walk up the DOM to find the overflow container (the
+      // lg:overflow-y-auto wrapper in layout.tsx), then reset its
+      // scroll position.
+      let el = markerRef.current?.parentElement ?? null;
+      while (el) {
+        const { overflowY } = getComputedStyle(el);
+        if (overflowY === 'auto' || overflowY === 'scroll') {
+          el.scrollTo({ top: 0, left: 0 });
+          return;
+        }
+        el = el.parentElement;
       }
-      el = el.parentElement;
-    }
-    // Fallback: scroll the window itself.
-    window.scrollTo(0, 0);
+      // Fallback: scroll the window itself (mobile / no overflow container).
+      window.scrollTo({ top: 0, left: 0 });
+    };
+
+    // Scroll immediately for the common case.
+    scrollToTop();
+
+    // Also scroll after a rAF — the browser (or Next.js router) may restore
+    // scroll position asynchronously after React commits, which would undo an
+    // earlier reset. A double-rAF puts us after layout, paint, *and* any
+    // post-paint scroll-restoration the browser queues up.
+    const outerFrame = requestAnimationFrame(() => {
+      innerFrame = requestAnimationFrame(scrollToTop);
+    });
+    let innerFrame: number | undefined;
+
+    return () => {
+      cancelAnimationFrame(outerFrame);
+      if (innerFrame !== undefined) cancelAnimationFrame(innerFrame);
+    };
   }, [pathname]);
 
   return <div ref={markerRef} aria-hidden="true" style={{ display: 'none' }} />;
